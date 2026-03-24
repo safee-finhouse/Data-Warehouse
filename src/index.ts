@@ -5,6 +5,7 @@ import { logger } from "./lib/logger.js";
 import { healthRoutes } from "./modules/health/health.routes.js";
 import { xeroRoutes } from "./modules/xero/xero.routes.js";
 import { syncRoutes } from "./modules/sync/sync.routes.js";
+import { transformRoutes } from "./modules/transform/transform.routes.js";
 
 async function bootstrap() {
   const app = Fastify({
@@ -18,6 +19,7 @@ async function bootstrap() {
   await app.register(healthRoutes);
   await app.register(xeroRoutes, { prefix: "/xero" });
   await app.register(syncRoutes, { prefix: "/sync" });
+  await app.register(transformRoutes, { prefix: "/transform" });
 
   await app.listen({ port: env.PORT, host: "0.0.0.0" });
   logger.info(`Server listening on port ${env.PORT}`, { env: env.NODE_ENV });

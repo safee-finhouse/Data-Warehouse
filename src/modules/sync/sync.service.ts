@@ -22,6 +22,7 @@ import { syncPayments } from "./entities/payments.js";
 import { syncBankTransactions } from "./entities/bank-transactions.js";
 import { syncAccounts } from "./entities/accounts.js";
 import { syncManualJournals } from "./entities/manual-journals.js";
+import { transformConnection } from "../transform/transform.service.js";
 
 export interface EntityResult {
   synced: number;
@@ -121,6 +122,9 @@ export async function syncConnection(
       accounts: accounts.synced,
       manualJournals: manualJournals.synced,
     });
+
+    // Transform raw_xero → warehouse (runs automatically after every successful sync)
+    await transformConnection(connectionId, connection.tenant_id);
 
     return {
       runId: run.id,
