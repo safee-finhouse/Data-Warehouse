@@ -49,9 +49,9 @@ export async function syncBankTransactions(
             contact_id, contact_name,
             updated_date_utc, raw
           ) VALUES (
-            ${connectionId}, ${tenantId}, ${t.BankTransactionID},
-            ${t.Type}, ${t.Status}, ${t.Reference ?? null}, ${t.IsReconciled}, ${date},
-            ${t.SubTotal}, ${t.TotalTax}, ${t.Total},
+            ${connectionId}, ${tenantId}, ${t.BankTransactionID ?? null},
+            ${t.Type ?? null}, ${t.Status ?? null}, ${t.Reference ?? null}, ${t.IsReconciled ?? null}, ${date},
+            ${t.SubTotal ?? null}, ${t.TotalTax ?? null}, ${t.Total ?? null},
             ${t.CurrencyCode ?? null}, ${t.CurrencyRate ?? null},
             ${t.BankAccount?.AccountID ?? null}, ${t.BankAccount?.Code ?? null}, ${t.BankAccount?.Name ?? null},
             ${t.Contact?.ContactID ?? null}, ${t.Contact?.Name ?? null},
