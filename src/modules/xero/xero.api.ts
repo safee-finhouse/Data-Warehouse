@@ -54,7 +54,14 @@ async function fetchWithRetry(
   let attempt = 0;
 
   while (true) {
-    const res = await fetch(url, init);
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 30_000); // 30s per request
+    let res: Response;
+    try {
+      res = await fetch(url, { ...init, signal: controller.signal });
+    } finally {
+      clearTimeout(timeout);
+    }
 
     if (res.status === 429) {
       const retryAfter = res.headers.get("Retry-After");
