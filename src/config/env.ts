@@ -20,6 +20,9 @@ const envSchema = z.object({
   SYNC_FULL_CRON:        z.string().default("0 2 * * *"),   // nightly 2 AM UTC
   SYNC_INCREMENTAL_CRON: z.string().default("*/20 * * * *"), // every 20 minutes
   SCHEDULER_ENABLED:     z.coerce.boolean().default(true),
+
+  // Logging
+  LOG_LEVEL: z.enum(["debug", "info", "warn", "error"]).default("info"),
 });
 
 const parsed = envSchema.safeParse(process.env);

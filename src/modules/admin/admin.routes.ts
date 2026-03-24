@@ -88,6 +88,11 @@ export async function adminRoutes(app: FastifyInstance) {
     const limit = Math.min(parseInt(req.query.limit ?? "50", 10), 200);
     const { status, tenantId } = req.query;
 
+    // Build optional filters as SQL fragments to avoid type-inference issues
+    // when passing null parameters alongside ::uuid casts.
+    const statusFilter   = status   ? sql`AND status    = ${status}`          : sql``;
+    const tenantFilter   = tenantId ? sql`AND tenant_id = ${tenantId}::uuid`  : sql``;
+
     const rows = await sql`
       SELECT
         id,
@@ -109,9 +114,9 @@ export async function adminRoutes(app: FastifyInstance) {
         total_records_synced,
         total_records_failed
       FROM ops.vw_sync_run_summary
-      WHERE
-        (${status ?? null} IS NULL OR status = ${status ?? null})
-        AND (${tenantId ?? null} IS NULL OR tenant_id = ${tenantId ?? null}::uuid)
+      WHERE 1=1
+        ${statusFilter}
+        ${tenantFilter}
       ORDER BY created_at DESC
       LIMIT ${limit}
     `;
@@ -157,6 +162,9 @@ export async function adminRoutes(app: FastifyInstance) {
     const { tenantId, staleOnly } = req.query;
     const onlyStale = staleOnly === "true";
 
+    const tenantFilter = tenantId ? sql`AND tenant_id = ${tenantId}::uuid` : sql``;
+    const staleFilter  = onlyStale ? sql`AND freshness_status IN ('stale', 'never_synced')` : sql``;
+
     const rows = await sql`
       SELECT
         tenant_id,
@@ -171,9 +179,9 @@ export async function adminRoutes(app: FastifyInstance) {
         last_run_completed_at,
         last_run_error
       FROM ops.vw_tenant_freshness
-      WHERE
-        (${tenantId ?? null} IS NULL OR tenant_id = ${tenantId ?? null}::uuid)
-        AND (${onlyStale} = false OR freshness_status IN ('stale', 'never_synced'))
+      WHERE 1=1
+        ${tenantFilter}
+        ${staleFilter}
       ORDER BY tenant_name, entity
     `;
     return reply.send(rows);
@@ -212,9 +220,9 @@ export async function adminRoutes(app: FastifyInstance) {
       FROM manual_inputs.upload_batches ub
       JOIN core.tenants t ON t.id = ub.tenant_id
       LEFT JOIN manual_inputs.uncoded_statement_lines l ON l.batch_id = ub.id
-      WHERE
-        (${tenantId ?? null} IS NULL OR ub.tenant_id = ${tenantId ?? null}::uuid)
-        AND (${status ?? null} IS NULL OR ub.status = ${status ?? null})
+      WHERE 1=1
+        ${tenantId ? sql`AND ub.tenant_id = ${tenantId}::uuid` : sql``}
+        ${status   ? sql`AND ub.status = ${status}`            : sql``}
       GROUP BY ub.id, t.name
       ORDER BY ub.created_at DESC
       LIMIT ${limit}
