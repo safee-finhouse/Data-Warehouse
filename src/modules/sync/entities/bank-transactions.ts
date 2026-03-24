@@ -53,7 +53,7 @@ export async function syncBankTransactions(
             ${t.Type}, ${t.Status}, ${t.Reference ?? null}, ${t.IsReconciled}, ${date},
             ${t.SubTotal}, ${t.TotalTax}, ${t.Total},
             ${t.CurrencyCode ?? null}, ${t.CurrencyRate ?? null},
-            ${t.BankAccount.AccountID}, ${t.BankAccount.Code}, ${t.BankAccount.Name},
+            ${t.BankAccount?.AccountID ?? null}, ${t.BankAccount?.Code ?? null}, ${t.BankAccount?.Name ?? null},
             ${t.Contact?.ContactID ?? null}, ${t.Contact?.Name ?? null},
             ${updatedAt}, ${JSON.stringify(t)}
           )
