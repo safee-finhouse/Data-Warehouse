@@ -19,7 +19,7 @@ import { logger } from "../../lib/logger.js";
 import { xeroGet, parseXeroDate } from "../xero/xero.api.js";
 import type { XeroInvoicesResponse } from "../../types/xero.js";
 
-const PAGE_SIZE = 100;
+const PAGE_SIZE = 1000; // Xero allows up to 1000 per page
 
 export async function syncInvoices(
   connectionId: string,
