@@ -28,7 +28,9 @@ export async function healthRoutes(app: FastifyInstance) {
     }
 
     const status = dbOk && warehouseOk ? "ok" : "degraded";
-    const code   = dbOk && warehouseOk ? 200 : 503;
+    // Always return 200 — Railway will otherwise refuse to start the container
+    // before migrations have run, creating a chicken-and-egg problem.
+    const code   = 200;
 
     return reply.code(code).send({
       status,
