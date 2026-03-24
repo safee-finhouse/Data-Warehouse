@@ -7,7 +7,7 @@ import fs from "fs";
 import path from "path";
 import { sql } from "./client.js";
 
-async function migrate() {
+export async function runMigrations() {
   await sql`
     CREATE TABLE IF NOT EXISTS schema_migrations (
       id         SERIAL PRIMARY KEY,
@@ -42,10 +42,14 @@ async function migrate() {
   }
 
   console.log("Migrations complete.");
-  await sql.end();
 }
 
-migrate().catch((err) => {
-  console.error("Migration failed:", err);
-  process.exit(1);
-});
+// Allow running directly: node dist/db/migrate.js
+if (process.argv[1]?.endsWith("migrate.js") || process.argv[1]?.endsWith("migrate.ts")) {
+  runMigrations()
+    .then(() => sql.end())
+    .catch((err) => {
+      console.error("Migration failed:", err);
+      process.exit(1);
+    });
+}

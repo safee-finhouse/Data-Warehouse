@@ -2,6 +2,7 @@ import Fastify from "fastify";
 import sensible from "@fastify/sensible";
 import { env } from "./config/env.js";
 import { logger } from "./lib/logger.js";
+import { runMigrations } from "./db/migrate.js";
 import { healthRoutes } from "./modules/health/health.routes.js";
 import { xeroRoutes } from "./modules/xero/xero.routes.js";
 import { syncRoutes } from "./modules/sync/sync.routes.js";
@@ -11,6 +12,8 @@ import { adminRoutes } from "./modules/admin/admin.routes.js";
 import { startScheduler } from "./scheduler.js";
 
 async function bootstrap() {
+  await runMigrations();
+
   const app = Fastify({
     logger: false, // we use our own logger
     trustProxy: true,
