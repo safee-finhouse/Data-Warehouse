@@ -25,6 +25,9 @@ import { transformFactInvoiceLine } from "./facts/fact-invoice-line.js";
 import { transformFactPayment } from "./facts/fact-payment.js";
 import { transformFactBankTransaction } from "./facts/fact-bank-transaction.js";
 import { transformFactManualJournal } from "./facts/fact-manual-journal.js";
+import { transformTrialBalance } from "./reports/trial-balance.js";
+import { transformProfitAndLoss } from "./reports/profit-and-loss.js";
+import { transformBalanceSheet } from "./reports/balance-sheet.js";
 import type { TransformSummary } from "./transform.types.js";
 
 export async function transformConnection(
@@ -44,6 +47,10 @@ export async function transformConnection(
     () => transformFactPayment(connectionId, tenantId),
     () => transformFactBankTransaction(connectionId, tenantId),
     () => transformFactManualJournal(connectionId, tenantId),
+    // ── Report snapshots ──────────────────────────────────────────────────────
+    () => transformTrialBalance(connectionId, tenantId),
+    () => transformProfitAndLoss(connectionId, tenantId),
+    () => transformBalanceSheet(connectionId, tenantId),
   ];
 
   const results = [];

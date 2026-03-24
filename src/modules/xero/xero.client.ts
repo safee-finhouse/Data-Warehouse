@@ -21,6 +21,8 @@ import type {
   XeroAccountsResponse,
   XeroManualJournal,
   XeroManualJournalsResponse,
+  XeroReport,
+  XeroReportsResponse,
 } from "../../types/xero.js";
 
 // ─── Shared types ─────────────────────────────────────────────────────────────
@@ -179,6 +181,41 @@ export async function* listManualJournals(
     if (journals.length < PAGE_SIZE) break;
     page++;
   }
+}
+
+// ─── Reports ──────────────────────────────────────────────────────────────────
+// Reports are single non-paginated responses. Date params are YYYY-MM-DD strings.
+
+async function fetchReport(
+  ctx: XeroClientContext,
+  reportType: string,
+  params: Record<string, string>,
+): Promise<XeroReport> {
+  const data = await xeroGet<XeroReportsResponse>(
+    ctx.connectionId,
+    ctx.xeroTenantId,
+    `Reports/${reportType}`,
+    params,
+  );
+  const report = data.Reports?.[0];
+  if (!report) throw new Error(`Xero returned no report for ${reportType}`);
+  return report;
+}
+
+export function getTrialBalance(ctx: XeroClientContext, date: string): Promise<XeroReport> {
+  return fetchReport(ctx, "TrialBalance", { date });
+}
+
+export function getProfitAndLoss(
+  ctx: XeroClientContext,
+  fromDate: string,
+  toDate: string,
+): Promise<XeroReport> {
+  return fetchReport(ctx, "ProfitAndLoss", { fromDate, toDate });
+}
+
+export function getBalanceSheet(ctx: XeroClientContext, date: string): Promise<XeroReport> {
+  return fetchReport(ctx, "BalanceSheet", { date });
 }
 
 // ─── Accounts ─────────────────────────────────────────────────────────────────

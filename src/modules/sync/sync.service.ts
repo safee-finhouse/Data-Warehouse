@@ -22,6 +22,7 @@ import { syncPayments } from "./entities/payments.js";
 import { syncBankTransactions } from "./entities/bank-transactions.js";
 import { syncAccounts } from "./entities/accounts.js";
 import { syncManualJournals } from "./entities/manual-journals.js";
+import { syncReports } from "./reports.js";
 import { transformConnection } from "../transform/transform.service.js";
 
 export interface EntityResult {
@@ -41,6 +42,7 @@ export interface SyncResult {
     bankTransactions: EntityResult;
     accounts:         EntityResult;
     manualJournals:   EntityResult;
+    reports:          EntityResult;
   };
 }
 
@@ -103,6 +105,10 @@ export async function syncConnection(
       connectionId, connection.xero_tenant_id, run.id, connection.tenant_id,
     );
 
+    const reports = await syncReports(
+      connectionId, connection.xero_tenant_id, run.id, connection.tenant_id,
+    );
+
     const durationMs = Date.now() - start;
 
     await sql`
@@ -121,6 +127,7 @@ export async function syncConnection(
       bankTransactions: bankTransactions.synced,
       accounts: accounts.synced,
       manualJournals: manualJournals.synced,
+      reports: reports.synced,
     });
 
     // Transform raw_xero → warehouse (runs automatically after every successful sync)
@@ -131,7 +138,7 @@ export async function syncConnection(
       connectionId,
       tenantName: connection.xero_tenant_name,
       durationMs,
-      entities: { invoices, contacts, payments, bankTransactions, accounts, manualJournals },
+      entities: { invoices, contacts, payments, bankTransactions, accounts, manualJournals, reports },
     };
   } catch (err) {
     const durationMs = Date.now() - start;

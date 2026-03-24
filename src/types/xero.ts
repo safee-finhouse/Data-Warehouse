@@ -255,3 +255,35 @@ export interface XeroManualJournal {
 export interface XeroManualJournalsResponse {
   ManualJournals: XeroManualJournal[];
 }
+
+// ─── Reports ──────────────────────────────────────────────────────────────────
+
+export interface XeroReportCellAttribute {
+  Id:    string;
+  Value: string;
+}
+
+export interface XeroReportCell {
+  Value:       string;
+  Attributes?: XeroReportCellAttribute[];
+}
+
+export interface XeroReportRow {
+  RowType: "Header" | "Section" | "Row" | "SummaryRow";
+  Title?:  string;
+  Cells?:  XeroReportCell[];
+  Rows?:   XeroReportRow[];
+}
+
+export interface XeroReport {
+  ReportID:       string;
+  ReportName:     string;
+  ReportType:     string;
+  ReportDate:     string;
+  UpdatedDateUTC: string;
+  Rows:           XeroReportRow[];
+}
+
+export interface XeroReportsResponse {
+  Reports: XeroReport[];
+}
