@@ -1,0 +1,36 @@
+{
+  "name": "finhouse-warehouse",
+  "version": "0.1.0",
+  "description": "Finhouse data warehouse and Xero sync service",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "lint": "eslint src --ext .ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "migrate": "tsx src/db/migrate.ts",
+    "migrate:create": "tsx src/db/migrate-create.ts"
+  },
+  "dependencies": {
+    "fastify": "^4.27.0",
+    "@fastify/sensible": "^5.6.0",
+    "postgres": "^3.4.4",
+    "dotenv": "^16.4.5",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "typescript": "^5.4.5",
+    "tsx": "^4.15.6",
+    "vitest": "^1.6.0",
+    "eslint": "^8.57.0",
+    "@typescript-eslint/eslint-plugin": "^7.13.1",
+    "@typescript-eslint/parser": "^7.13.1"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
