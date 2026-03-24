@@ -9,8 +9,16 @@
 import { FastifyInstance } from "fastify";
 import { sql } from "../../db/client.js";
 import { syncConnection } from "./sync.service.js";
+import { syncAllConnections } from "./sync.runner.js";
 
 export async function syncRoutes(app: FastifyInstance) {
+  // ── POST /sync/run/all ────────────────────────────────────────────────────────
+  // Trigger a full sync across all active connections
+  app.post("/run/all", async (_req, reply) => {
+    const result = await syncAllConnections("manual");
+    return reply.send(result);
+  });
+
   // ── POST /sync/connections/:id/run ───────────────────────────────────────────
   app.post<{ Params: { id: string } }>(
     "/connections/:id/run",

@@ -19,6 +19,8 @@ import type {
   XeroBankTransactionsResponse,
   XeroAccount,
   XeroAccountsResponse,
+  XeroManualJournal,
+  XeroManualJournalsResponse,
 } from "../../types/xero.js";
 
 // ─── Shared types ─────────────────────────────────────────────────────────────
@@ -147,6 +149,34 @@ export async function* listBankTransactions(
     yield txns;
 
     if (txns.length < PAGE_SIZE) break;
+    page++;
+  }
+}
+
+// ─── Manual Journals ──────────────────────────────────────────────────────────
+
+export async function* listManualJournals(
+  ctx: XeroClientContext,
+  opts?: ListOptions,
+): AsyncGenerator<XeroManualJournal[]> {
+  const headers = modifiedSinceHeader(opts);
+  let page = 1;
+
+  while (true) {
+    const data = await xeroGet<XeroManualJournalsResponse>(
+      ctx.connectionId,
+      ctx.xeroTenantId,
+      "ManualJournals",
+      { page: String(page), pageSize: String(PAGE_SIZE) },
+      headers,
+    );
+
+    const journals = data.ManualJournals ?? [];
+    if (journals.length === 0) break;
+
+    yield journals;
+
+    if (journals.length < PAGE_SIZE) break;
     page++;
   }
 }

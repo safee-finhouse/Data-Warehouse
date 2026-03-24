@@ -228,3 +228,30 @@ export interface XeroAccount {
 export interface XeroAccountsResponse {
   Accounts: XeroAccount[];
 }
+
+// ─── Manual Journals ──────────────────────────────────────────────────────────
+
+export interface XeroManualJournalLine {
+  LineAmount:   number;
+  AccountCode:  string;
+  Description?: string;
+  TaxType?:     string;
+  TaxAmount?:   number;
+  IsBlank?:     boolean;
+}
+
+export type XeroManualJournalStatus = "DRAFT" | "POSTED" | "DELETED" | "VOIDED";
+
+export interface XeroManualJournal {
+  ManualJournalID: string;
+  Narration:       string;
+  Date?:           XeroDate;
+  DateString?:     string;
+  Status:          XeroManualJournalStatus;
+  JournalLines?:   XeroManualJournalLine[];
+  UpdatedDateUTC:  XeroDate;
+}
+
+export interface XeroManualJournalsResponse {
+  ManualJournals: XeroManualJournal[];
+}
