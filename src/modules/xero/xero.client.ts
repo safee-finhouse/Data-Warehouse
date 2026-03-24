@@ -36,10 +36,11 @@ export interface ListOptions {
   modifiedAfter?: Date;
 }
 
-const PAGE_SIZE = 100;
+const PAGE_SIZE = 1000; // Xero max — reduces API calls by 10x vs default of 100
 
 function modifiedSinceHeader(opts?: ListOptions): Record<string, string> {
   if (!opts?.modifiedAfter) return {};
+  // Xero If-Modified-Since only has date precision — strip the time component
   return { "If-Modified-Since": opts.modifiedAfter.toUTCString() };
 }
 
