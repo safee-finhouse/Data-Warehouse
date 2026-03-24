@@ -15,6 +15,11 @@ const envSchema = z.object({
 
   // App
   APP_SECRET: z.string().min(32),
+
+  // Scheduler (cron expressions — set to empty string to disable)
+  SYNC_FULL_CRON:        z.string().default("0 2 * * *"),   // nightly 2 AM UTC
+  SYNC_INCREMENTAL_CRON: z.string().default("*/20 * * * *"), // every 20 minutes
+  SCHEDULER_ENABLED:     z.coerce.boolean().default(true),
 });
 
 const parsed = envSchema.safeParse(process.env);
