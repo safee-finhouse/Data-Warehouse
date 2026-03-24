@@ -31,8 +31,8 @@ USER nodejs
 
 EXPOSE 3000
 
-# Docker-native health check (supplements Railway's HTTP healthcheck)
+# Docker-native health check — uses PORT env var (Railway sets this to 8080)
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-  CMD wget -qO- http://localhost:3000/health || exit 1
+  CMD wget -qO- http://localhost:${PORT:-3000}/health || exit 1
 
 CMD ["node", "dist/index.js"]
