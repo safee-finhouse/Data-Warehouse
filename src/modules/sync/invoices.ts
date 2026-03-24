@@ -79,11 +79,11 @@ export async function syncInvoices(
             amount_due, amount_paid, subtotal, total_tax, total,
             currency_code, updated_date_utc, raw, synced_at
           ) VALUES (
-            ${connectionId}, ${inv.InvoiceID}, ${inv.InvoiceNumber ?? null},
-            ${inv.Type}, ${inv.Status},
+            ${connectionId}, ${inv.InvoiceID ?? null}, ${inv.InvoiceNumber ?? null},
+            ${inv.Type ?? null}, ${inv.Status ?? null},
             ${inv.Contact?.ContactID ?? null}, ${inv.Contact?.Name ?? null},
             ${date}, ${dueDate},
-            ${inv.AmountDue}, ${inv.AmountPaid}, ${inv.SubTotal}, ${inv.TotalTax}, ${inv.Total},
+            ${inv.AmountDue ?? null}, ${inv.AmountPaid ?? null}, ${inv.SubTotal ?? null}, ${inv.TotalTax ?? null}, ${inv.Total ?? null},
             ${inv.CurrencyCode ?? null}, ${updatedAt}, ${JSON.stringify(inv)}, now()
           )
           ON CONFLICT (connection_id, xero_invoice_id) DO UPDATE SET
@@ -115,12 +115,12 @@ export async function syncInvoices(
             currency_code, currency_rate, reference,
             updated_date_utc, raw
           ) VALUES (
-            ${connectionId}, ${tenantId}, ${inv.InvoiceID},
-            ${inv.InvoiceNumber ?? null}, ${inv.Type}, ${inv.Status},
+            ${connectionId}, ${tenantId}, ${inv.InvoiceID ?? null},
+            ${inv.InvoiceNumber ?? null}, ${inv.Type ?? null}, ${inv.Status ?? null},
             ${inv.Contact?.ContactID ?? null}, ${inv.Contact?.Name ?? null},
             ${date}, ${dueDate},
-            ${inv.AmountDue}, ${inv.AmountPaid}, ${inv.AmountCredited ?? null},
-            ${inv.SubTotal}, ${inv.TotalTax}, ${inv.Total},
+            ${inv.AmountDue ?? null}, ${inv.AmountPaid ?? null}, ${inv.AmountCredited ?? null},
+            ${inv.SubTotal ?? null}, ${inv.TotalTax ?? null}, ${inv.Total ?? null},
             ${inv.CurrencyCode ?? null}, ${inv.CurrencyRate ?? null}, ${inv.Reference ?? null},
             ${updatedAt}, ${JSON.stringify(inv)}
           )
@@ -153,9 +153,9 @@ export async function syncInvoices(
               description, quantity, unit_amount, line_amount,
               account_code, tax_type, tax_amount, item_code, raw
             ) VALUES (
-              ${connectionId}, ${tenantId}, ${inv.InvoiceID}, ${line.LineItemID},
+              ${connectionId}, ${tenantId}, ${inv.InvoiceID ?? null}, ${line.LineItemID ?? null},
               ${line.Description ?? null},
-              ${line.Quantity}, ${line.UnitAmount}, ${line.LineAmount},
+              ${line.Quantity ?? null}, ${line.UnitAmount ?? null}, ${line.LineAmount ?? null},
               ${line.AccountCode ?? null}, ${line.TaxType ?? null},
               ${line.TaxAmount ?? null}, ${line.ItemCode ?? null},
               ${JSON.stringify(line)}

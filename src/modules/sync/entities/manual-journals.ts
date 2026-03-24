@@ -45,8 +45,8 @@ export async function syncManualJournals(
             narration, date, status,
             updated_date_utc, raw
           ) VALUES (
-            ${connectionId}, ${tenantId}, ${j.ManualJournalID},
-            ${j.Narration}, ${date}, ${j.Status},
+            ${connectionId}, ${tenantId}, ${j.ManualJournalID ?? null},
+            ${j.Narration ?? null}, ${date}, ${j.Status ?? null},
             ${updatedAt}, ${JSON.stringify(j)}
           )
           ON CONFLICT (connection_id, xero_id) DO UPDATE SET

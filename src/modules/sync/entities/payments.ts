@@ -48,9 +48,9 @@ export async function syncPayments(
             account_id, account_code,
             updated_date_utc, raw
           ) VALUES (
-            ${connectionId}, ${tenantId}, ${p.PaymentID},
-            ${date}, ${p.Amount}, ${p.Reference ?? null}, ${p.IsReconciled},
-            ${p.Status}, ${p.PaymentType}, ${p.CurrencyRate ?? null},
+            ${connectionId}, ${tenantId}, ${p.PaymentID ?? null},
+            ${date}, ${p.Amount ?? null}, ${p.Reference ?? null}, ${p.IsReconciled ?? null},
+            ${p.Status ?? null}, ${p.PaymentType ?? null}, ${p.CurrencyRate ?? null},
             ${p.Invoice?.InvoiceID ?? null}, ${p.Invoice?.InvoiceNumber ?? null},
             ${p.Account?.AccountID ?? null}, ${p.Account?.Code ?? null},
             ${updatedAt}, ${JSON.stringify(p)}

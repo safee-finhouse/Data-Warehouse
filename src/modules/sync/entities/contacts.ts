@@ -46,10 +46,10 @@ export async function syncContacts(
             tax_number, default_currency,
             updated_date_utc, raw
           ) VALUES (
-            ${connectionId}, ${tenantId}, ${c.ContactID},
-            ${c.Name}, ${c.FirstName ?? null}, ${c.LastName ?? null},
+            ${connectionId}, ${tenantId}, ${c.ContactID ?? null},
+            ${c.Name ?? null}, ${c.FirstName ?? null}, ${c.LastName ?? null},
             ${c.EmailAddress ?? null},
-            ${c.ContactStatus}, ${c.IsSupplier}, ${c.IsCustomer},
+            ${c.ContactStatus ?? null}, ${c.IsSupplier ?? null}, ${c.IsCustomer ?? null},
             ${c.TaxNumber ?? null}, ${c.DefaultCurrency ?? null},
             ${updatedAt}, ${JSON.stringify(c)}
           )

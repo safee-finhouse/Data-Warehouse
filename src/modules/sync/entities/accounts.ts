@@ -33,11 +33,11 @@ export async function syncAccounts(
             enable_payments,
             updated_date_utc, raw
           ) VALUES (
-            ${connectionId}, ${tenantId}, ${a.AccountID},
-            ${a.Code}, ${a.Name}, ${a.Type}, ${a.Status}, ${a.Class},
+            ${connectionId}, ${tenantId}, ${a.AccountID ?? null},
+            ${a.Code ?? null}, ${a.Name ?? null}, ${a.Type ?? null}, ${a.Status ?? null}, ${a.Class ?? null},
             ${a.Description ?? null}, ${a.TaxType ?? null},
             ${a.SystemAccount ?? null},
-            ${a.EnablePaymentsToAccount},
+            ${a.EnablePaymentsToAccount ?? null},
             ${updatedAt}, ${JSON.stringify(a)}
           )
           ON CONFLICT (connection_id, xero_id) DO UPDATE SET
