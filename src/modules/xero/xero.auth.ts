@@ -28,6 +28,7 @@ const SCOPES = [
   "accounting.invoices.read",
   "accounting.payments.read",
   "accounting.banktransactions.read",
+  "accounting.journals.read",
 ].join(" ");
 
 export interface XeroTokenSet {
